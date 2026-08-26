@@ -26,8 +26,19 @@ echo "port in main script = ${port}"
 export WHEEL_USE_HTTP=1
 export WHEEL_BASE_URL="/node/${host}/${port}/"
 export WHEEL_TEMPD="${HOME}/.wheel"
+# log level: containers up to 2025 read WHEEL_LOGLEVEL, 2026+ reads WHEEL_LOG_LEVEL.
+# Set both so a single script serves every container version.
 export WHEEL_LOGLEVEL="debug"
+export WHEEL_LOG_LEVEL="debug"
 export WHEEL_PORT=${port}
+
+# Store WHEEL's SQLite DBs and JSON config/migrations under a writable, persistent $HOME dir.
+# The container runs with --writable-tmpfs only, so the in-image default (/usr/src/server/app/db)
+# is not reliably writable and the session store fails at boot with SQLITE_CANTOPEN.
+# Older containers that predate these variables simply ignore them.
+export WHEEL_CONFIG_DIR="${HOME}/.wheel"
+export WHEEL_SESSION_DB_DIR="${HOME}/.wheel/db"
+export WHEEL_USER_DB_DIR="${HOME}/.wheel/db"
 
 #singularity run  -w --pwd /usr/src/server ${SIF}
 #singularity run  --pwd /usr/src/server ${SIF}
