@@ -25,5 +25,6 @@ attributes:
     widget: select
     help: "Choose a version of WHEEL."
     options:
-      - "latest"
-      - "2024"
+      - "2026"
+      - "2025"
+      - "2023"
