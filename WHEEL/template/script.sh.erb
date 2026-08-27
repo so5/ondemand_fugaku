@@ -42,4 +42,9 @@ export WHEEL_USER_DB_DIR="${HOME}/.wheel/db"
 
 #singularity run  -w --pwd /usr/src/server ${SIF}
 #singularity run  --pwd /usr/src/server ${SIF}
-singularity run  --writable-tmpfs --pwd /usr/src/server ${SIF}
+# entrypoint.sh (built to run as Docker root) writes /root/ssh_env and /root/.bashrc.
+# Under Singularity the container runs as the unprivileged user and cannot write the
+# image's /root (mode 0700, uid 0), so entrypoint.sh fails with "Permission denied".
+# --scratch /root overlays /root with a per-instance in-memory tmpfs: writable, never
+# lands on shared $HOME or node-local disk, and is discarded when the container exits.
+singularity run  --writable-tmpfs --scratch /root --pwd /usr/src/server ${SIF}
