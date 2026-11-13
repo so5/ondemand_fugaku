@@ -37,8 +37,9 @@ export WHEEL_PORT=${port}
 # is not reliably writable and the session store fails at boot with SQLITE_CANTOPEN.
 # Older containers that predate these variables simply ignore them.
 export WHEEL_CONFIG_DIR="${HOME}/.wheel"
-export WHEEL_SESSION_DB_DIR="${HOME}/.wheel/db"
-export WHEEL_USER_DB_DIR="${HOME}/.wheel/db"
+# When anonymous login is used, before.sh sets WHEEL_DB_DIR to a per-instance directory.
+export WHEEL_SESSION_DB_DIR="${WHEEL_DB_DIR:-${HOME}/.wheel/db}"
+export WHEEL_USER_DB_DIR="${WHEEL_DB_DIR:-${HOME}/.wheel/db}"
 
 #singularity run  -w --pwd /usr/src/server ${SIF}
 #singularity run  --pwd /usr/src/server ${SIF}
